@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/Tiles/forest.png</file>
+        <file>images/Tiles/grassland.png</file>
+        <file>images/Tiles/mountain.png</file>
+        <file>images/Icons/coins.png</file>
+        <file>images/Icons/food.png</file>
+        <file>images/Icons/iron.png</file>
+        <file>images/Icons/logs.png</file>
+        <file>images/Icons/stone.png</file>
+        <file>images/Tiles/lake.png</file>
+        <file>images/Tiles/ocean2.png</file>
+        <file>images/Tiles/farmland.png</file>
+        <file>images/Workers/worker_triple.png</file>
+        <file>images/Workers/worker.png</file>
+        <file>images/Workers/worker_double.png</file>
+        <file>images/Buildings/ship.png</file>
+        <file>images/Buildings/outpost.png</file>
+        <file>images/Buildings/building.png</file>
+        <file>images/Buildings/mine.png</file>
+        <file>images/Buildings/headquarters.png</file>
+        <file>images/Buildings/cottage.png</file>
+    </qresource>
+</RCC>
