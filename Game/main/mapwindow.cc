@@ -82,7 +82,7 @@ void MapWindow::openDialog()
 
 void MapWindow::openScoreDialog()
 {
-    if(gManager_->getTurnCount() > gManager_->getCurrentTurnNumber()){
+    if(!gameStarted_ or gManager_->getTurnCount() > gManager_->getCurrentTurnNumber() ){
         return;
     }
     scoreDialog_->insertGameScoreData(gManager_->getScores());
