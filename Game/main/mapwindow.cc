@@ -92,7 +92,7 @@ void MapWindow::openScoreDialog()
 void MapWindow::newGame()
 {
     geHandler_ = std::make_shared<Game::GameEventHandler>();
-    gScene_ = std::make_shared<Game::GameScene>();
+	gScene_ = std::make_shared<Game::GameScene>(30,20,20);
     objManager_ = std::make_shared<Game::ObjectManager>(gScene_);
 
     Game::GameScene* gsRawptr = gScene_.get();
@@ -115,7 +115,7 @@ void MapWindow::newGame()
     setButtonStateEnabled(true);
     // Resize the graphicsview and fit map to it
     std::pair<int, int> mapSize = gm->getMapSize();
-    resizeGameView(mapSize.first, mapSize.second);
+	resizeGameView(mapSize.first, mapSize.second);
 
     // Update GUI
     updatePlayerInfo(gManager_->getCurrentPlayer());

@@ -15,12 +15,12 @@ MapItem::MapItem(const std::shared_ptr<Course::GameObject> &obj,
     claimPen_.setWidth(2);
 }
 
-QRectF MapItem::boundingRect() const
+/*QRectF MapItem::boundingRect() const
 {
-    QPoint topleft = sceneLocation_*size_;
-    QPoint bottomright = sceneLocation_*size_ + QPoint(size_,size_);
+	QPoint topleft = scenePos().toPoint();
+	QPoint bottomright = scenePos().toPoint() + QPoint(size_,size_);
     return QRectF(topleft,bottomright);
-}
+}*/
 
 bool MapItem::claimed()
 {
@@ -199,22 +199,37 @@ void MapItem::drawTileImage(QPainter* painter)
     }
 
     currentItem_ = sceneDrawing;
-    painter->drawPixmap(sceneLocation_.x()*size_,
-                        sceneLocation_.y()*size_,size_,size_,sceneDrawing);
+	painter->drawPixmap(0, 0, size_, size_, sceneDrawing);
 }
 
 void MapItem::drawBuildings(QPainter *painter)
 {
-    for(unsigned int i=0; i<buildings_.size(); i++){
-        int offsetY = 0;
-        Q_UNUSED(offsetY);
-        if(i>1) offsetY = 1;
-        QPoint location(sceneLocation_.x()*size_ + size_/2*((i+1)%2),
-                                sceneLocation_.y()*size_ + size_/2*offsetY);
+	// Draw one only
+	if(buildings_.size() == 1){
+		painter->drawPixmap(0, 0, size_, size_, buildingImages_.at(0));
+	}
+	// Draw to lower half
+	else if(buildings_.size() <= 2){
+		for(unsigned int i=0; i<buildings_.size(); i++){
+			QPoint location(i*size_/2, size_/2);
 
-        painter->drawPixmap(location.x(), location.y(),
-                            size_/2,size_/2,buildingImages_.at(i));
-    }
+			painter->drawPixmap(location.x(), location.y(),
+								size_/2, size_/2, buildingImages_.at(i));
+		}
+	}
+	// Draw 2x2 grid
+	else {
+		for(unsigned int i=0; i<buildings_.size(); i++){
+			int offsetY = 1;
+			Q_UNUSED(offsetY);
+			if(i>1){ offsetY = 0; }
+
+			QPoint location(size_/2 * (i%2), size_/2 * offsetY);
+
+			painter->drawPixmap(location.x(), location.y(),
+								size_/2, size_/2, buildingImages_.at(i));
+		}
+	}
 }
 
 void MapItem::drawWorkers(QPainter *painter)
@@ -224,8 +239,6 @@ void MapItem::drawWorkers(QPainter *painter)
     }
 
     QPixmap workerImage;
-    QPoint location(sceneLocation_.x()*size_ + size_/4,
-                    sceneLocation_.y()*size_ + size_/2);
 
     if(workers_.size() == 1){
         workerImage = QPixmap(WORKER_SINGLE_IMAGE);
@@ -235,7 +248,6 @@ void MapItem::drawWorkers(QPainter *painter)
         workerImage = QPixmap(WORKER_TRIPLE_IMAGE);
     }
 
-    painter->drawPixmap(location.x(), location.y(),
-                        size_/2,size_/2,workerImage);
+	painter->drawPixmap(size_/2, size_/2, size_/2, size_/2, workerImage);
 }
 }

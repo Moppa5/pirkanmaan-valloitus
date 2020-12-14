@@ -31,7 +31,7 @@ public:
      * @brief Calculates the boundings for this item
      * @return QRectF that bounds the item
      */
-    QRectF boundingRect() const;
+	//QRectF boundingRect() const;
 
     /**
      * @brief Check claimed status

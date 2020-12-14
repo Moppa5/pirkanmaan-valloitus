@@ -24,7 +24,7 @@ GameManager::GameManager(std::shared_ptr<Dialog> sd,
     totalTurnCount_ = settingsDialog_->getRounds();
     currentTurnNumber_ = 1;
 
-    setMapSize(30,20);
+	setMapSize(30, 20);
     GenerateWorld();
 
     gameOver_ = false;

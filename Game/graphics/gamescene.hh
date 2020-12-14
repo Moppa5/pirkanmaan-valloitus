@@ -27,7 +27,7 @@ public:
     /**
      * @brief Empty constructor
      */
-    explicit GameScene();
+	GameScene(int mapWidth, int mapHeight, int tileSize);
 
     /**
      * @brief Calculates scene area boundaries and boundRect for it
@@ -71,17 +71,15 @@ public:
                               const bool highlight=true);
 
     /**
-     * @brief Cathces if player clicks mapitem on scene
-     * @param event to catch
-     * @return true if item is clicked
-     */
-    virtual bool event(QEvent* event) override;
-
-    /**
      * @brief Refresh the scene items if they're stuck or won't update
      * @param Players on the game
      */
     void refreshScene(const std::vector<std::shared_ptr<Player>> &players);
+
+protected:
+	void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 signals:
     /**
@@ -98,8 +96,11 @@ private:
     // Map size
     int mapWidth_ = 30;
     int mapHeight_ = 20;
-    int mapScale_ = 18; //hardcoded
+	int tileScale_ = 18; //hardcoded
     QGraphicsItem* mapBoundRect_ = nullptr;
+
+	QPointF screenClickPosition_;
+	QGraphicsItem* clickedItem_ = nullptr;
 };
 }
 #endif // GAMESCENE_HH
