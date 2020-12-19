@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>479</width>
-    <height>477</height>
+    <height>621</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,16 +19,51 @@
 color: rgb(238, 238, 236);
 font: 75 11pt &quot;Console&quot;;</string>
   </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>500</y>
+     <width>341</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fill up and select at least the player and color fields</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>530</y>
+     <width>199</width>
+     <height>59</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      </property>
+      <property name="centerButtons">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QWidget" name="gridLayoutWidget_2">
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>30</y>
-     <width>161</width>
-     <height>331</height>
+     <y>20</y>
+     <width>181</width>
+     <height>471</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="playerGrid">
     <item row="13" column="0">
      <widget class="QLabel" name="roundsLabel">
       <property name="text">
@@ -39,14 +74,161 @@ font: 75 11pt &quot;Console&quot;;</string>
       </property>
      </widget>
     </item>
-    <item row="9" column="0">
+    <item row="14" column="0">
+     <widget class="QSpinBox" name="roundCount"/>
+    </item>
+    <item row="12" column="0">
      <widget class="QPushButton" name="resetPlayers">
       <property name="text">
        <string>Reset players</string>
       </property>
      </widget>
     </item>
+    <item row="3" column="0">
+     <widget class="QSpinBox" name="playerCount">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>4</number>
+      </property>
+     </widget>
+    </item>
     <item row="7" column="0">
+     <layout class="QGridLayout" name="colorGrid">
+      <item row="1" column="1">
+       <widget class="QPushButton" name="darkgreen">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 85, 0);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="navy">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 0, 127);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="blue">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0,127,255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pink">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 0, 127);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="red">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255,0,0);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="lime">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0,255,0);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="light_violet">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(79, 73, 255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="turq">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="yellow">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255,255,0);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="orange_yellow">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 207, 64);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="violet">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(85, 0, 127);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="orange">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 99, 71);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="15" column="0">
+     <widget class="QLabel" name="seedLabel">
+      <property name="text">
+       <string>Seed</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
      <widget class="QLineEdit" name="player">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(255, 255, 255);
@@ -66,7 +248,7 @@ border-radius: 3px;
       </property>
      </widget>
     </item>
-    <item row="12" column="0">
+    <item row="16" column="0">
      <widget class="QLineEdit" name="seed">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(255, 255, 255);
@@ -78,50 +260,7 @@ border-radius: 3px;</string>
       </property>
      </widget>
     </item>
-    <item row="8" column="0">
-     <widget class="QPushButton" name="addPlayerBox">
-      <property name="styleSheet">
-       <string notr="true">background-color: green;</string>
-      </property>
-      <property name="text">
-       <string>Add Player</string>
-      </property>
-     </widget>
-    </item>
-    <item row="14" column="0">
-     <widget class="QSpinBox" name="roundCount"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="playerCountLabel">
-      <property name="text">
-       <string>Playercount</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QSpinBox" name="playerCount">
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>4</number>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="0">
-     <widget class="QLabel" name="seedLabel">
-      <property name="text">
-       <string>Seed</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
+    <item row="11" column="0">
      <widget class="QTextBrowser" name="playerBrowser">
       <property name="maximumSize">
        <size>
@@ -144,38 +283,58 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
-   </layout>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>370</y>
-     <width>211</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Fill up at least the player fields</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>390</y>
-     <width>199</width>
-     <height>59</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="standardButtons">
-       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <item row="6" column="0">
+     <widget class="QLabel" name="colorLabel">
+      <property name="styleSheet">
+       <string notr="true">border-radius: 25px;</string>
       </property>
-      <property name="centerButtons">
-       <bool>true</bool>
+      <property name="text">
+       <string>Pick a color</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="playerCountLabel">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Playercount</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QPushButton" name="addPlayerBox">
+      <property name="styleSheet">
+       <string notr="true">background-color: green;</string>
+      </property>
+      <property name="text">
+       <string>Add Player</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLabel" name="preferredColor">
+      <property name="minimumSize">
+       <size>
+        <width>15</width>
+        <height>82</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>15</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>

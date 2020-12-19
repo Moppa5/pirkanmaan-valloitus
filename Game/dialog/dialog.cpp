@@ -16,6 +16,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->resetPlayers->hide();
     ui->playerBrowser->hide();
     ui->playerBrowser->setMaximumHeight(75);
+
     connect(ui->buttonBox,SIGNAL(clicked(QAbstractButton*)),this,
             SLOT(verifyDialogData()));
     connect(ui->addPlayerBox,SIGNAL(clicked(bool)),this,SLOT(addPlayer()));
@@ -31,6 +32,20 @@ Dialog::Dialog(QWidget *parent) :
     connect(ui->roundCount, SIGNAL(valueChanged(int)), this,
             SLOT(setRounds()));
 
+    // connect the color buttons
+    connect(ui->red, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->lime, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->blue, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->yellow, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->pink, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->darkgreen, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->navy, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->orange_yellow, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->violet, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->turq, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->light_violet, SIGNAL(clicked()), this, SLOT(addColor()));
+    connect(ui->orange, SIGNAL(clicked()), this, SLOT(addColor()));
+
     ui->roundCount->setMinimum(MIN_ROUND_COUNT);
     ui->roundCount->setMaximum(MAX_ROUND_COUNT);
     ui->roundCount->setValue(DEFAULT_ROUND_COUNT);
@@ -40,7 +55,7 @@ Dialog::~Dialog()
     delete ui;
 }
 
-std::vector<QString> Dialog::getPlayers()
+std::unordered_map<QString, QColor> Dialog::getPlayers()
 {
     return players_;
 }
@@ -67,14 +82,30 @@ bool Dialog::isPlayernameValid()
     return true;
 }
 
+bool Dialog::isValidColor()
+{
+    for (auto player: players_) {
+
+        if (player.second == pickedColor_) {
+            return false;
+            break;
+        }
+    }
+
+    return true;
+}
+
 QString Dialog::getPlayersString()
 {
-        QString players = "";
+    QString players = EMPTY;
+    int i = 0;
 
-        for (unsigned int i = 0; i<players_.size(); i++) {
-            players += QString::number(i+1) + " " + players_.at(i) + "\n";
-        }
-        return players;
+    for (auto player: players_) {
+        players += QString::number(i+1) + " " + player.first + "\n";
+        i++;
+    }
+
+    return players;
 }
 
 void Dialog::keyPressEvent(QKeyEvent *event)
@@ -90,54 +121,125 @@ void Dialog::verifyDialogData()
     }
 }
 
+void Dialog::addColor()
+{
+    if (playersAdded_) {
+        return;
+    }
+
+    QString buttonName = QObject::sender()->objectName();
+    QLabel *colorLabel = ui->colorLabel;
+
+    if (buttonName == "red") {
+        pickedColor_ = QColor(255,0,0);
+    } if (buttonName == "lime") {
+        pickedColor_ = QColor(0,255,0);
+    } if (buttonName == "blue") {
+        pickedColor_ = QColor(0,127,255);
+    } if (buttonName == "yellow") {
+        pickedColor_ = QColor(255,255,0);
+    } if (buttonName == "pink") {
+        pickedColor_ = QColor(255,0,127);
+    } if (buttonName == "darkgreen") {
+        pickedColor_ = QColor(0,85,0);
+    } if (buttonName == "navy") {
+        pickedColor_ = QColor(0,0,127);
+    } if (buttonName == "orange_yellow") {
+        pickedColor_ = QColor(255,207,64);
+    } if (buttonName == "violet") {
+        pickedColor_ = QColor(85,0,127);
+    } if (buttonName == "turq") {
+        pickedColor_ = QColor(0,255,255);
+    } if (buttonName == "light_violet") {
+        pickedColor_ = QColor(79,73,255);
+    } if (buttonName == "orange") {
+        pickedColor_ = QColor(255,99,71);
+    }
+    QString background = " background-color : ";
+    background += pickedColor_.name();
+    ui->preferredColor->setStyleSheet(background);
+
+    if (!isValidColor()) {
+        colorLabel->setText(COLOR_TAKEN);
+        return;
+    }
+
+    colorLabel->setText("Picked ");
+}
+
 void Dialog::addPlayer()
 {
     QLineEdit* player = ui->player;
     QLabel* labelText = ui->playerLabel;
+    QLabel* colorLabel = ui->colorLabel;
     int size = players_.size();
     ui->playerCount->setDisabled(true);
     QString playerName = player->text().trimmed();
 
-    if (isPlayernameValid()) {
+    if (!isValidColor()) {
+        colorLabel->setText(COLOR_TAKEN);
+        return;
+    }
+
+    if (!pickedColor_.isValid()) {
+        colorLabel->setText(COLOR);
+        return;
+    }
+
+    if (isPlayernameValid() ) {
         // Length valid or not
+
         if (size == 0 && !playerName.isEmpty()) {
-            players_.push_back(playerName);
+            players_.insert({playerName, pickedColor_});
+            ui->preferredColor->setStyleSheet("background-color: qlineargradient(spread:pad, x1:1, y1:0,"
+                                              " x2:1, y2:0, stop:0 rgba(21, 40, 38, 255),"
+                                              " stop:1 rgba(255, 255, 255, 255));");
+            pickedColor_ = nullptr;
+
             if (playerCount_ > 1) {
                 labelText->setText("Player 2");
+                colorLabel->setText("Pick a color");
             } else {
                 playersAdded();
             }
-            player->setText("");
+            player->setText(EMPTY);
+
         } else {
             // More players than one
             bool valid = true;
-            for (QString s: players_) {
-                if (s == playerName) {
+            for (auto s: players_) {
+                if (s.first == playerName) {
                     valid = false;
                     labelText->setText(PLAYERNAME_TAKEN);
                     break;
                 }
             }
-            if (valid && playerName != "") {
-                players_.push_back(playerName);
+            if (valid && playerName != EMPTY) {
+                players_.insert({playerName, pickedColor_});
+                pickedColor_ = nullptr;
+                ui->preferredColor->setStyleSheet("background-color: qlineargradient(spread:pad, x1:1, y1:0,"
+                                                  " x2:1, y2:0, stop:0 rgba(21, 40, 38, 255),"
+                                                  " stop:1 rgba(255, 255, 255, 255));");
                 QString playerNumber = QString::number(players_.size()+1);
 
                 if (static_cast<int>(players_.size()) == playerCount_) {
                     playersAdded();
                 } else {
                     labelText->setText("Player "+playerNumber);
+                    colorLabel->setText("Pick a color");
                 }
-                player->setText("");
+                player->setText(EMPTY);
             }
         }
-    } else if (playerName == "")  {
+    } else if (playerName == EMPTY)  {
         labelText->setText(PLAYERNAME_EMPTY);
-        player->setText("");
+        player->setText(EMPTY);
     }
     else {
         labelText->setText(TOO_LONG_NAME);
-        player->setText("");
+        player->setText(EMPTY);
     }
+
 }
 void Dialog::playerCount()
 {
@@ -157,9 +259,14 @@ void Dialog::playersAdded()
     ui->playerLabel->setText(PLAYERS_ADDED);
     ui->playerBrowser->show();
     ui->player->hide();
+    ui->colorLabel->hide();
+    ui->preferredColor->setStyleSheet("background-color: qlineargradient(spread:pad, x1:1, y1:0,"
+                                      " x2:1, y2:0, stop:0 rgba(21, 40, 38, 255),"
+                                      " stop:1 rgba(255, 255, 255, 255));");
     ui->addPlayerBox->hide();
     ui->resetPlayers->show();
     ui->playerBrowser->setText(getPlayersString());
+    playersAdded_ = true;
 }
 
 void Dialog::resetPlayersButton()
@@ -169,10 +276,13 @@ void Dialog::resetPlayersButton()
     ui->addPlayerBox->setEnabled(true);
     ui->player->show();
     ui->addPlayerBox->show();
+    ui->colorLabel->show();
     ui->playerLabel->setText("Player 1");
-    ui->playerBrowser->setText("");
+    ui->playerBrowser->setText(EMPTY);
     ui->playerBrowser->hide();
     ui->playerCount->setEnabled(true);
+    ui->colorLabel->setText("Pick a color");
+    playersAdded_ = false;
 }
 
 void Dialog::playerLineEdit()

@@ -43,7 +43,7 @@ namespace Game {
 
 /**
  * @brief The GameManager class is an interface between Game GUI,
- * ObjectManager and GameEventHandler. This class also keeps track of player
+ * ObjectManager and GameEventHandler. The class also keeps track of player
  * and game turns / rounds.
  */
 class GameManager
@@ -172,9 +172,14 @@ public:
      */
     std::shared_ptr<Player> getCurrentPlayer();
 
+    /**
+     * @brief Fetches the game scores and orders them
+     * @return Ordered score data
+     */
     std::map<int, std::string> getScores();
 
     bool gameOver_ = true;
+
 private:
     /**
      * @brief Adds player to the game
@@ -182,7 +187,7 @@ private:
      * @param objects - GameObjects that belong to the player
      * @post Exception guarantee: No-throw
      */
-    void addPlayer(QString name, std::vector<std::shared_ptr<Course::GameObject>> objects={});
+    void addPlayer(std::pair<QString, QColor> name, std::vector<std::shared_ptr<Course::GameObject>> objects={});
 
     /**
      * @brief Creates Building object for addBuildingOnTile
@@ -220,8 +225,16 @@ private:
      */
     void updateOwners();
 
+    /**
+     * @brief Calculates the score of the game
+     */
     void calculateScores();
 
+    /**
+     * @brief Calculates scores based on player resources
+     * @param name of the player
+     * @param resources of the player
+     */
     void addResourcesToScore(std::string name,
                              Course::ResourceMap resources);
 
