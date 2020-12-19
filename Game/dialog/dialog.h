@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDebug>
 #include <vector>
+#include <unordered_map>
 
 namespace Ui {
 class Dialog;
@@ -21,10 +22,10 @@ public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
     /**
-     * @brief Fetches the player vector
-     * @return vector that contains the players
+     * @brief Fetches the added players
+     * @return unordered_map containin name and preference color
      */
-    std::vector<QString> getPlayers();
+    std::unordered_map<QString, QColor> getPlayers();
 
     /**
      * @brief Fetches the game seed if set
@@ -45,6 +46,12 @@ public:
     bool isPlayernameValid();
 
     /**
+     * @brief Checks whether the color is not taken or empty
+     * @return True if valid
+     */
+    bool isValidColor();
+
+    /**
      * @brief Gets players as strings
      * @return QSTring with players on it
      */
@@ -59,6 +66,11 @@ public slots:
      * Data is valid at least if playernames has been set
      */
     void verifyDialogData();
+
+    /**
+     * @brief Adds color for the specified player
+     */
+    void addColor();
 
     /**
      * @brief Adds player to the vector
@@ -97,8 +109,10 @@ public slots:
 
 private:
     Ui::Dialog *ui;
-    std::vector<QString> players_;
+    std::unordered_map<QString, QColor> players_;
+    QColor pickedColor_;
     int playerCount_ = 0;
+    bool playersAdded_ = false;
     int seed_;
     int rounds_;
 };

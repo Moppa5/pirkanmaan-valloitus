@@ -49,10 +49,13 @@ const QString WORKER_ADDED = "Worker(s) added";
 const QString NO_BUILDING_SELECTED = "Select building first";
 const QString GAME_END = "Game Over";
 
-// Error messages
+// Error and other related messages
+const QString EMPTY = "";
 const QString TOO_LONG_NAME = "Name too long";
-const QString PLAYERNAME_TAKEN = "Already taken";
+const QString PLAYERNAME_TAKEN = "Name already taken";
 const QString PLAYERNAME_EMPTY = "Name can't be empty";
+const QString COLOR_TAKEN = "Color already taken";
+const QString COLOR = "Pick a color";
 
 const QString NOT_ENOUGH_MONEY = "Not enough money";
 const QString NOT_ENOUGH_RESOURCES = "Not enough resources";
@@ -75,12 +78,6 @@ const int MIN_ROUND_COUNT = 10;
 const int MAX_ROUND_COUNT = 1000;
 const int MIN_MAP_WIDTH = 3;
 const int MIN_MAP_HEIGHT = 2;
-
-// Player colors
-const std::vector<QColor> PLAYER_COLORS{QColor(255,0,0),
-                                        QColor(0,255,0),
-                                        QColor(0,127,255),
-                                        QColor(255,255,0)};
 
 // Building and claim limits
 const int MAX_CLAIMS_PER_TURN = 2;

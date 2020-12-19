@@ -14,8 +14,9 @@ GameManager::GameManager(std::shared_ptr<Dialog> sd,
     parent_(parent)
 {
     // Add players
-    std::vector<QString> players = settingsDialog_->getPlayers();
-    for(auto player : players){
+    std::unordered_map<QString, QColor> players = settingsDialog_->getPlayers();
+
+    for(const std::pair<QString, QColor> player : players){
         addPlayer(player);
     }
 
@@ -47,14 +48,14 @@ std::pair<int, int> GameManager::getMapSize()
     return std::make_pair(mapWidth_, mapHeight_);
 }
 
-void GameManager::addPlayer(QString name,
+void GameManager::addPlayer(std::pair<QString, QColor> name,
                             std::vector<std::shared_ptr<Course::GameObject> >
                             objects)
 {
-    std::shared_ptr<Player> player = std::make_shared<Player>(name.toStdString(),
+    std::shared_ptr<Player> player = std::make_shared<Player>(name.first.toStdString(),
                                                               objects);
     player->setResourceMap(STARTING_RESOURCEMAP);
-    player->setColor(PLAYER_COLORS.at(currentPlayerIndex_));
+    player->setColor(name.second); // the given color
 
     players_.push_back(player);
     currentPlayerIndex_ += 1;
