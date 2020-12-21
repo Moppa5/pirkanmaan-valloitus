@@ -4,6 +4,7 @@
 
 #include <QKeyEvent>
 #include <sstream>
+#include <QTime>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -62,6 +63,15 @@ std::unordered_map<QString, QColor> Dialog::getPlayers()
 
 int Dialog::getSeed()
 {
+    if (seed_ == 0) {
+        QTime currentTime = QTime().currentTime();
+        std::string seed = currentTime.toString().toStdString();
+
+        for(unsigned int i=0; i<seed.length(); i++){
+            seed_ += (int)seed[i];
+        }
+    }
+
     return seed_;
 }
 

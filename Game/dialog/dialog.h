@@ -113,8 +113,8 @@ private:
     QColor pickedColor_;
     int playerCount_ = 0;
     bool playersAdded_ = false;
-    int seed_;
-    int rounds_;
+    int seed_ = 0;
+    int rounds_ = 0;
 };
 
 #endif // DIALOG_H
