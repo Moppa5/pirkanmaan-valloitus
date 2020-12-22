@@ -27,6 +27,7 @@ GameManager::GameManager(std::shared_ptr<Dialog> sd,
 
 	setMapSize(30, 20);
     GenerateWorld();
+	gameScene_->loadTiles();
 
     gameOver_ = false;
 }
@@ -75,6 +76,7 @@ void GameManager::claimArea(MapItem* tile)
 
     std::shared_ptr<Course::PlayerBase> player = players_.at(currentPlayerIndex_);
     tile->getTileObject()->setOwner(player);
+	player->addObject(tile->getTileObject());
 
     // Item color based on player's color
     QColor color = players_.at(currentPlayerIndex_)->getColor();

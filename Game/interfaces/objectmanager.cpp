@@ -3,11 +3,6 @@
 
 namespace Game {
 
-ObjectManager::ObjectManager(const std::shared_ptr<GameScene> &gameScene) :
-    gameScene_(gameScene)
-{
-}
-
 ObjectManager::ObjectManager()
 {
 }
@@ -66,13 +61,6 @@ void ObjectManager::addTiles(const std::vector
     // Loop over tiles
     for(auto tile : tiles){
         tiles_.push_back(tile);
-        if (gameScene_ != nullptr) {
-            /* UnitTests required this check since it was unsuccessful
-             * to create GameScene for the tests. Otherwise the tests
-             * would've crashed immediately when testing this method
-             */
-            gameScene_->drawItem(tile);
-        }
     }
 }
 

@@ -92,8 +92,8 @@ void MapWindow::openScoreDialog()
 void MapWindow::newGame()
 {
     geHandler_ = std::make_shared<Game::GameEventHandler>();
-	gScene_ = std::make_shared<Game::GameScene>(30,20,20);
-    objManager_ = std::make_shared<Game::ObjectManager>(gScene_);
+	objManager_ = std::make_shared<Game::ObjectManager>();
+	gScene_ = std::make_shared<Game::GameScene>(30,20,20, objManager_.get());
 
     Game::GameScene* gsRawptr = gScene_.get();
     ui_->graphicsView->setScene(dynamic_cast<QGraphicsScene*>(gsRawptr));
@@ -541,12 +541,12 @@ void MapWindow::updateTileInfo(const QString &type, Game::MapItem* &item,
     // Remove border from previously clicked tile
     if(currentItem_ != nullptr && item->getTileObject()
             != currentItem_->getTileObject()){
-        gScene_->removeBorder(currentItem_);
-        gScene_->update(currentItem_->boundingRect());
+		gScene_->highlightTile(currentItem_, false);
+		gScene_->update(currentItem_->sceneBoundingRect());
     }
     // Highlight clicked tile
-    gScene_->addBorder(item, HIGHLIGHT_COLOR);
-    gScene_->update(item->boundingRect());
+	gScene_->highlightTile(item, true);
+	gScene_->update(item->sceneBoundingRect());
 
     // Set current mapitem
     currentItem_ = item;
@@ -781,6 +781,7 @@ void MapWindow::claimClicked()
                        currentItem_->getItem(),
                        currentItem_->getTileObject()->getOwner()->getName());
         updatePlayerInfo(gManager_->getCurrentPlayer());
+		gScene_->drawClaimBorders();
     } catch (const Course::BaseException &e){
         ui_->claimCostLabel->setText(QString::fromStdString(e.msg()));
         ui_->claimButton->setStyleSheet("background-color: red;");

@@ -1,11 +1,13 @@
 #ifndef GAMESCENE_HH
 #define GAMESCENE_HH
 
+#include "interfaces/objectmanager.hh"
 #include "core/gameobject.h"
 #include "constants/constants.hh"
 #include "graphics/mapitem.hh"
 #include <math.h>
 #include "core/playerbase.h"
+#include "tiles/tilebase.h"
 
 #include <QGraphicsScene>
 #include <QEvent>
@@ -13,6 +15,9 @@
 #include <QGraphicsView>
 #include <QDebug>
 #include <memory>
+
+// Forward declerations
+class ObjectManager;
 
 namespace Game {
 
@@ -27,18 +32,40 @@ public:
     /**
      * @brief Empty constructor
      */
-	GameScene(int mapWidth, int mapHeight, int tileSize);
+	GameScene(int mapWidth, int mapHeight, int tileSize, ObjectManager* objman);
 
     /**
      * @brief Calculates scene area boundaries and boundRect for it
      */
     void resize();
 
+	/**
+	 * @brief Loads tiles to the scene from the objectmanager
+	 */
+	void loadTiles();
+
     /**
      * @brief Draws item
      * @param obj to draw
      */
     void drawItem(const std::shared_ptr<Course::GameObject> &obj);
+
+	/**
+	 * @brief Draws borders to tilles based on claims
+	 */
+	void drawClaimBorders();
+
+	/**
+	 * @brief Draws a continuos border to tiles given
+	 * @param Tiles to be surrounded by border
+	 * @note This assumes the area defined by the tiles is continuous
+	 */
+	void drawBordersToTiles(std::vector<MapItem*> tiles);
+
+	/**
+	 * @brief Does the heavy lifting of drawing borders
+	 */
+	void calculateBorders();
 
     /**
      * @brief Adds claim for certain object
@@ -53,22 +80,12 @@ public:
      */
     void removeClaim(MapItem *obj);
 
-    /**
-     * @brief Adds border for item object
-     * @param obj to add it for
-     * @param borderColor for border
-     * @param highlight the tile
-     */
-    void addBorder(MapItem* obj, const QColor &borderColor,
-                   const bool highlight=true);
-
-    /**
-     * @brief Removes the border
-     * @param obj to remove border from
-     * @param highlight the tile
-     */
-    void removeBorder(MapItem *obj,
-                              const bool highlight=true);
+	/**
+	 * @brief Highlight the selected tile
+	 * @param obj the item to highlight
+	 * @param highlightOn bool to highlight or not
+	 */
+	void highlightTile(MapItem *obj, bool highlightOn=true);
 
     /**
      * @brief Refresh the scene items if they're stuck or won't update
@@ -99,8 +116,13 @@ private:
 	int tileScale_ = 18; //hardcoded
     QGraphicsItem* mapBoundRect_ = nullptr;
 
+	// Event variables
 	QPointF screenClickPosition_;
 	QGraphicsItem* clickedItem_ = nullptr;
+
+	// Game state stuff
+	ObjectManager* objmanager_;
+	std::vector<QGraphicsLineItem*>	borderLines_;
 };
 }
 #endif // GAMESCENE_HH

@@ -130,17 +130,6 @@ void MapItem::drawHighlight(QPainter *painter)
     }
 }
 
-void MapItem::addBorder(QColor color)
-{
-    borderPen_.setBrush(color);
-    borderColor_ = color;
-}
-
-void MapItem::removeBorder()
-{
-    borderColor_ = "";
-}
-
 void MapItem::drawBorder(QPainter *painter)
 {
     if(borderColor_ != ""){

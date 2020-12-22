@@ -92,17 +92,6 @@ public:
     void removeHighlight();
 
     /**
-     * @brief Adds border for this tile
-     * @param Border color
-     */
-    void addBorder(QColor color);
-
-    /**
-     * @brief Removes the border
-     */
-    void removeBorder();
-
-    /**
      * @brief Sets claim color
      * @param Player's color
      */

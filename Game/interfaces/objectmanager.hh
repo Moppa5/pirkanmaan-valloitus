@@ -4,7 +4,6 @@
 #include "interfaces/iobjectmanager.h"
 #include "core/gameobject.h"
 #include "graphics/mapitem.hh"
-#include "graphics/gamescene.hh"
 #include "tiles/tilebase.h"
 
 #include "exceptions/keyerror.h"
@@ -21,8 +20,6 @@ namespace Game {
 class ObjectManager : public Course::iObjectManager
 {
 public:
-    ObjectManager(const std::shared_ptr<GameScene> &gameScene);
-
     /**
      * @brief Empty constructor for test cases
      * Had to be created since it was unsuccessful to create GameScene
@@ -105,7 +102,6 @@ public:
     void removeWorker(const std::shared_ptr<Course::WorkerBase> &worker);
 
 private:
-    std::shared_ptr<GameScene> gameScene_ = nullptr;
     std::vector<std::shared_ptr<Course::TileBase>> tiles_;
     std::vector<std::shared_ptr<Course::BuildingBase>> buildings_;
     std::vector<std::shared_ptr<Course::WorkerBase>> workers_;
