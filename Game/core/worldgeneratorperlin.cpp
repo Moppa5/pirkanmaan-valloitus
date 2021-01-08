@@ -28,7 +28,6 @@ void WorldGeneratorPerlin::generateMap(
         for (unsigned int y = 0; y < size_y; ++y)
         {
             double weight = noise.getNoiseValue(x, y);
-            std::cout << weight << std::endl;
             auto ctor = findTileByValue(weight);
 
             // Override default productions

@@ -5,7 +5,6 @@
 #include "core/resourcemaps.h"
 #include "constants/resourcemaps2.h"
 
-#include "dialog/dialog.h"
 #include "interfaces/gameeventhandler.hh"
 #include "interfaces/objectmanager.hh"
 #include "graphics/gamescene.hh"
@@ -50,23 +49,56 @@ class GameManager
 
 {
 public:
-    GameManager(std::shared_ptr<Dialog> sd,
-                std::shared_ptr<GameEventHandler> geh,
+	GameManager(std::shared_ptr<GameEventHandler> geh,
                 std::shared_ptr<ObjectManager> om,
                 std::shared_ptr<GameScene> gs,
                 QWidget* parent);
 
-    // returns set map size for handling rejected size
+	///// Initialisations /////
+	/**
+	 * @brief Add players to the game
+	 * @param players - list of players
+	 */
+	void addPlayers(std::unordered_map<QString, QColor> players);
+
+	/**
+	 * @brief Adds player to the game
+	 * @param name - Name of the player
+	 * @param objects - GameObjects that belong to the player
+	 * @post Exception guarantee: No-throw
+	 */
+	void addPlayer(std::pair<QString, QColor> name, std::vector<std::shared_ptr<Course::GameObject>> objects={});
+
+	/**
+	 * @brief Sets the amount of turns every player will have
+	 * @param count - Turn count
+	 * @note No limits are enforced here
+	 */
+	void setTurnCount(int count);
+
     /**
      * @brief Sets the map size in tiles
      * @param wdith - Width of the map in tiles
      * @param height - Height of the map in tiles
-     * @return Map size as a pair
+	 * @return Map size as a pair
      * @note Automatically applies min and max bounds.
      *  Return can be used to check if the size was valid
      */
     std::pair<int,int> setMapSize(int width, int height);
 
+	/**
+	 * @brief Sets the seed
+	 * @param seed -
+	 */
+	void setSeed(int seed);
+
+	/**
+	 * @brief Starts the game if everything is ok
+	 * @return bool indicating whether all settings are valid and/or set
+	 * @note For example starting the game without players
+	 * would make no sense and this would return false
+	 */
+	bool startGame();
     /**
      * @brief Gets the map size in tiles
      * @return Map size as a pair
@@ -178,17 +210,10 @@ public:
      */
     std::map<int, std::string> getScores();
 
-    bool gameOver_ = true;
+	bool gameStarted_ = false;
+	bool gameOver_ = false;
 
 private:
-    /**
-     * @brief Adds player to the game
-     * @param name - Name of the player
-     * @param objects - GameObjects that belong to the player
-     * @post Exception guarantee: No-throw
-     */
-    void addPlayer(std::pair<QString, QColor> name, std::vector<std::shared_ptr<Course::GameObject>> objects={});
-
     /**
      * @brief Creates Building object for addBuildingOnTile
      * @param type - Building name as string
@@ -238,22 +263,21 @@ private:
     void addResourcesToScore(std::string name,
                              Course::ResourceMap resources);
 
-    std::shared_ptr<Dialog> settingsDialog_ = nullptr;
     std::shared_ptr<GameEventHandler> gameEventHandler_ = nullptr;
     std::shared_ptr<ObjectManager> objectManager_ = nullptr;
     std::shared_ptr<GameScene> gameScene_ = nullptr;
     QWidget* parent_ = nullptr;
 
-    int totalTurnCount_ = 0;
-    int currentTurnNumber_ = 0;
+	int totalTurnCount_ = 30;	// Default
+	int currentTurnNumber_ = 1;
 
     std::vector<std::shared_ptr<Player>> players_;
-    int currentPlayerIndex_ = 0;
-
+	int currentPlayerIndex_ = 0;
     std::map<std::string, int> playerScores_;
 
-    int mapWidth_;
-    int mapHeight_;
+	int mapWidth_ = 30;	// Default
+	int mapHeight_ = 20;// Default
+	int seed_ = 0;		//Default
 };
 }
 

@@ -47,7 +47,7 @@ void GameScene::drawItem(const std::shared_ptr<Course::GameObject> &obj)
     nItem->setPixmap(pix);
 
 	QPoint position = QPoint(obj->getCoordinate().x()*tileScale_, obj->getCoordinate().y()*tileScale_);
-	qDebug() << "created tile at " << obj->getCoordinate().asQpoint() << " turned into " << position;
+	//qDebug() << "created tile at " << obj->getCoordinate().asQpoint() << " turned into " << position;
 	nItem->setPos(position);
 
 	addItem(nItem);
@@ -83,7 +83,7 @@ void GameScene::drawClaimBorders()
 					.get()->getOwner().get());
 		if(owner != nullptr){
 			lines_ver.at(0).at(y).second = owner->getColor();
-			qDebug() << "Claim found at" << y << "0";
+			//qDebug() << "Claim found at" << y << "0";
 		}
 
 		// Middle tiles
@@ -110,7 +110,7 @@ void GameScene::drawClaimBorders()
 			// No border necessary if the colours match
 			if(first_tile_colour != second_tile_colour){
 				lines_ver.at(x).at(y) = std::make_pair(first_tile_colour, second_tile_colour);
-				qDebug() << "Claim found at" << y << x;
+				//qDebug() << "Claim found at" << y << x;
 			}
 		}
 
@@ -121,7 +121,7 @@ void GameScene::drawClaimBorders()
 					.get()->getOwner().get());
 		if(owner != nullptr){
 			lines_ver.at(mapWidth_).at(y).first = owner->getColor();
-			qDebug() << "Claim found at" << y << "31";
+			//qDebug() << "Claim found at" << y << "31";
 		}
 	}
 
@@ -243,23 +243,27 @@ void GameScene::refreshScene(const std::vector<std::shared_ptr<Player>> &players
 {
 	QList<QGraphicsItem*> itemList = items();
 
-		for (auto item: itemList) {
-			MapItem* trueItem = static_cast<MapItem*>(item);
-
-			if (trueItem->getTileObject()->getOwner() != nullptr) {
-				// Find owner color
-				std::shared_ptr<Player> player;
-				std::string ownerName = trueItem->getTileObject()->getOwner()->getName();
-
-				for(std::shared_ptr<Player> p : players){
-					if(p->getName() == ownerName){
-						player = p;
-					}
-				}
-				addClaim(trueItem,player->getColor());
-				trueItem->update(trueItem->boundingRect());
-			}
+	for (auto item: itemList) {
+		// Cast and check if the item is MapItem
+		MapItem* trueItem = dynamic_cast<MapItem*>(item);
+		if(trueItem == nullptr){
+			continue;
 		}
+
+		if (trueItem->getTileObject()->getOwner() != nullptr) {
+			// Find owner color
+			std::shared_ptr<Player> player;
+			std::string ownerName = trueItem->getTileObject()->getOwner()->getName();
+
+			for(std::shared_ptr<Player> p : players){
+				if(p->getName() == ownerName){
+					player = p;
+				}
+			}
+			addClaim(trueItem,player->getColor());
+			trueItem->update(trueItem->boundingRect());
+		}
+	}
 }
 
 /*bool GameScene::event(QEvent *event)
@@ -302,7 +306,7 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	screenClickPosition_ = event->screenPos();
 	clickedItem_ = itemAt(event->scenePos(), QTransform());
-	qDebug() << "clicked at " << screenClickPosition_ << " item " << clickedItem_;
+	//qDebug() << "clicked at " << screenClickPosition_ << " item " << clickedItem_;
 
 	if(clickedItem_ == nullptr){
 		QGraphicsScene::mousePressEvent(event);
@@ -322,7 +326,7 @@ void GameScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 	// Minimum amount of pixels which is considered moving and not just a twitch in clicking
 	int minimumMovement = 10;
-	qDebug() << "released click at " << event->scenePos();
+	//qDebug() << "released click at " << event->scenePos();
 	if(abs(screenClickPosition_.x()-event->screenPos().x()) < minimumMovement &&
 			abs(screenClickPosition_.y() - event->screenPos().y()) < minimumMovement){
 		Game::MapItem* itemObject = static_cast<Game::MapItem*>(clickedItem_);

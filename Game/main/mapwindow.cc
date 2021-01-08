@@ -70,10 +70,9 @@ void MapWindow::gameButtonClicked()
         }
     }
     // All these happen for the next player
+	resetElements();
     updatePlayerInfo(gManager_->getCurrentPlayer());
-    resetElements();
 }
-
 
 void MapWindow::openDialog()
 {
@@ -93,7 +92,7 @@ void MapWindow::newGame()
 {
     geHandler_ = std::make_shared<Game::GameEventHandler>();
 	objManager_ = std::make_shared<Game::ObjectManager>();
-	gScene_ = std::make_shared<Game::GameScene>(30,20,20, objManager_.get());
+	gScene_ = std::make_shared<Game::GameScene>(30,20,20, objManager_.get());	// GATHER MAP SIZE FROM GMAN
 
     Game::GameScene* gsRawptr = gScene_.get();
     ui_->graphicsView->setScene(dynamic_cast<QGraphicsScene*>(gsRawptr));
@@ -105,12 +104,22 @@ void MapWindow::newGame()
     currentZoomLevel = 1;
 
     // Start the game => create map etc.
-    std::shared_ptr<Game::GameManager> gm(new Game::GameManager(
-                          settingsDialog_, geHandler_,
-                                              objManager_,
-                                              gScene_,
-                                              this));
+	std::shared_ptr<Game::GameManager> gm(new Game::GameManager(
+											  geHandler_,
+											  objManager_,
+											  gScene_,
+											  this));
+	gm->addPlayers(settingsDialog_->getPlayers());
+	gm->setTurnCount(settingsDialog_->getRounds());
+	gm->setSeed(settingsDialog_->getSeed());
     gManager_ = gm;
+
+	// Check if game can start
+	if(gManager_->startGame() == false){
+		resetGame();
+		return;
+	}
+
     ui_->gameButton->setText(GAME_BUTTON_WHILE_GAME);
     setButtonStateEnabled(true);
     // Resize the graphicsview and fit map to it
@@ -118,8 +127,8 @@ void MapWindow::newGame()
 	resizeGameView(mapSize.first, mapSize.second);
 
     // Update GUI
-    updatePlayerInfo(gManager_->getCurrentPlayer());
     resetElements();
+	updatePlayerInfo(gManager_->getCurrentPlayer());
 
     gameStarted_ = true;
 }
@@ -608,6 +617,9 @@ void MapWindow::updateWorkerSpinBox(int value)
 
 void MapWindow::resetElements()
 {
+	ui_->turnCountLabel->setText("");
+	ui_->currentPlayerNameLabel->setText("");
+
     ui_->buildingsBox->setCurrentIndex(0);
     ui_->buildCostLabel->setText("");
 

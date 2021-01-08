@@ -81,8 +81,8 @@ void PerlinNoise::normaliseNoise()
         }
     }
 
-    std::cout << "Noise max: " + std::to_string(noiseMax) << std::endl;
-    std::cout << "Noise min: " + std::to_string(noiseMin) << std::endl;
+	//std::cout << "Noise max: " + std::to_string(noiseMax) << std::endl;
+	//std::cout << "Noise min: " + std::to_string(noiseMin) << std::endl;
 
     // Centralise noise based on min and max
     for(long unsigned int i=0; i<perlinNoise_.size(); i++){
@@ -102,8 +102,8 @@ void PerlinNoise::normaliseNoise()
         }
     }
 
-    std::cout << "Noise max: " + std::to_string(noiseMax) << std::endl;
-    std::cout << "Noise min: " + std::to_string(noiseMin) << std::endl;
+	//std::cout << "Noise max: " + std::to_string(noiseMax) << std::endl;
+	//std::cout << "Noise min: " + std::to_string(noiseMin) << std::endl;
 }
 
 void PerlinNoise::smoothSquare(int range)

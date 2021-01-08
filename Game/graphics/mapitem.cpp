@@ -168,6 +168,8 @@ void MapItem::drawTileImage(QPainter* painter)
 {
     QPixmap sceneDrawing;
 
+	// This should be done only once when creating the MapItem and
+	// again only if the image needs to be refreshed
     if (itemObject_->getType() == "Forest") {
         sceneDrawing = QPixmap(FOREST_IMAGE);
     } else if (itemObject_->getType() == "Grassland") {

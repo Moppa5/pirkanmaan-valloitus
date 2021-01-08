@@ -2,34 +2,41 @@
 #include <iostream>
 
 namespace Game {
-GameManager::GameManager(std::shared_ptr<Dialog> sd,
-                         std::shared_ptr<GameEventHandler> geh,
+GameManager::GameManager(std::shared_ptr<GameEventHandler> geh,
                          std::shared_ptr<ObjectManager> om,
                          std::shared_ptr<GameScene> gs,
                          QWidget* parent) :
-    settingsDialog_(sd),
     gameEventHandler_(geh),
     objectManager_(om),
     gameScene_(gs),
     parent_(parent)
 {
-    // Add players
-    std::unordered_map<QString, QColor> players = settingsDialog_->getPlayers();
 
-    for(const std::pair<QString, QColor> player : players){
-        addPlayer(player);
-    }
+}
 
-    currentPlayerIndex_ = 0;
-    gameEventHandler_->setPlayers(players_);
-    totalTurnCount_ = settingsDialog_->getRounds();
-    currentTurnNumber_ = 1;
+void GameManager::addPlayers(std::unordered_map<QString, QColor> players)
+{
+	for(const std::pair<QString, QColor> player : players){
+		addPlayer(player);
+	}
+}
 
-	setMapSize(30, 20);
-    GenerateWorld();
-	gameScene_->loadTiles();
+void GameManager::addPlayer(std::pair<QString, QColor> name,
+							std::vector<std::shared_ptr<Course::GameObject> >
+							objects)
+{
+	std::shared_ptr<Player> player = std::make_shared<Player>(name.first.toStdString(),
+															  objects);
+	player->addObjects(objects);
+	player->setResourceMap(STARTING_RESOURCEMAP);
+	player->setColor(name.second); // the given color
 
-    gameOver_ = false;
+	players_.push_back(player);
+}
+
+void GameManager::setTurnCount(int count)
+{
+	totalTurnCount_ = count;
 }
 
 std::pair<int, int> GameManager::setMapSize(int width, int height)
@@ -41,25 +48,34 @@ std::pair<int, int> GameManager::setMapSize(int width, int height)
         mapHeight_ = height;
     }
 
-    return std::make_pair(mapWidth_, mapHeight_);
+	return std::make_pair(mapWidth_, mapHeight_);
+}
+
+void GameManager::setSeed(int seed)
+{
+	seed_ = seed;
+}
+
+bool GameManager::startGame()
+{
+	// Add all necessary checks. Primitive for now
+	if( players_.size() == 0 ||
+		totalTurnCount_ <= 0){
+		return false;
+	}
+	gameEventHandler_->setPlayers(players_);
+
+	GenerateWorld();
+	gameScene_->loadTiles();
+
+	gameStarted_ = true;
+
+	return true;
 }
 
 std::pair<int, int> GameManager::getMapSize()
 {
     return std::make_pair(mapWidth_, mapHeight_);
-}
-
-void GameManager::addPlayer(std::pair<QString, QColor> name,
-                            std::vector<std::shared_ptr<Course::GameObject> >
-                            objects)
-{
-    std::shared_ptr<Player> player = std::make_shared<Player>(name.first.toStdString(),
-                                                              objects);
-    player->setResourceMap(STARTING_RESOURCEMAP);
-    player->setColor(name.second); // the given color
-
-    players_.push_back(player);
-    currentPlayerIndex_ += 1;
 }
 
 void GameManager::claimArea(MapItem* tile)
@@ -122,6 +138,7 @@ void GameManager::doTurn()
 
 void GameManager::updateOwners()
 {
+	// Don't do this, this recalculates everything
     gameScene_->refreshScene(players_);
 }
 
@@ -476,7 +493,7 @@ void GameManager::GenerateWorld()
     worldGenerator.addConstructor<Course::Grassland>(0.5, 0.8);
     worldGenerator.addConstructor<Game::Mountain>(0.8, 1);
 
-    worldGenerator.generateMap(mapWidth_, mapHeight_, settingsDialog_->getSeed(),
+	worldGenerator.generateMap(mapWidth_, mapHeight_, seed_,
                                objectManager_, gameEventHandler_);
 }
 
