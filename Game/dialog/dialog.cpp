@@ -127,6 +127,7 @@ void Dialog::verifyDialogData()
     int playerCount = players_.size();
 
     if (playerCount == playerCount_) {
+        emit dialogVerified();
         QDialog::accept();
     }
 }
