@@ -147,9 +147,12 @@ void MapWindow::resetGame()
     ui_->buildingsOnTile->clear();
     ui_->workersOnTileList->clear();
 
-    settingsDialog_ = std::make_shared<Dialog>();
+    settingsDialog_ = std::make_shared<Dialog>(this);
+    connect(settingsDialog_.get(), SIGNAL(dialogVerified()), this,
+            SLOT(gameButtonClicked()));
+    settingsDialog_->open();
+    settingsDialog_->setWindowModality(Qt::ApplicationModal);
     scoreDialog_ = std::make_shared<ScoreDialog>();
-    settingsDialog_->exec();
 }
 
 void MapWindow::setButtonStateEnabled(const bool state)

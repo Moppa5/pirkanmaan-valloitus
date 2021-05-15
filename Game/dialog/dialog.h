@@ -107,6 +107,12 @@ public slots:
      */
     void setRounds();
 
+signals:
+    /**
+     * @brief Custom dialog signal for successful game setup
+     */
+    void dialogVerified();
+
 private:
     Ui::Dialog *ui;
     std::unordered_map<QString, QColor> players_;
