@@ -64,7 +64,7 @@ std::unordered_map<QString, QColor> Dialog::getPlayers()
 int Dialog::getSeed()
 {
     if (seed_ == 0) {
-        QTime currentTime = QTime().currentTime();
+        const QTime &currentTime = QTime().currentTime();
         std::string seed = currentTime.toString().toStdString();
 
         for(unsigned int i=0; i<seed.length(); i++){
@@ -82,7 +82,7 @@ int Dialog::getRounds()
 
 bool Dialog::isPlayernameValid()
 {
-    QString playerName = ui->player->text().trimmed();
+    const QString &playerName = ui->player->text().trimmed();
 
     if (playerName.length() > MAX_PLAYERNAME_LENGTH or
             playerName.length() == 0) {
@@ -94,7 +94,7 @@ bool Dialog::isPlayernameValid()
 
 bool Dialog::isValidColor()
 {
-    for (auto player: players_) {
+    for (const auto &player: players_) {
 
         if (player.second == pickedColor_) {
             return false;
@@ -110,7 +110,7 @@ QString Dialog::getPlayersString()
     QString players = EMPTY;
     int i = 0;
 
-    for (auto player: players_) {
+    for (const auto &player: players_) {
         players += QString::number(i+1) + " " + player.first + "\n";
         i++;
     }
@@ -124,7 +124,7 @@ void Dialog::keyPressEvent(QKeyEvent *event)
 }
 void Dialog::verifyDialogData()
 {
-    int playerCount = players_.size();
+    const int &playerCount = players_.size();
 
     if (playerCount == playerCount_) {
         emit dialogVerified();
@@ -138,7 +138,7 @@ void Dialog::addColor()
         return;
     }
 
-    QString buttonName = QObject::sender()->objectName();
+    const QString &buttonName = QObject::sender()->objectName();
     QLabel *colorLabel = ui->colorLabel;
 
     if (buttonName == "red") {
@@ -183,9 +183,9 @@ void Dialog::addPlayer()
     QLineEdit* player = ui->player;
     QLabel* labelText = ui->playerLabel;
     QLabel* colorLabel = ui->colorLabel;
-    int size = players_.size();
+    const int &size = players_.size();
     ui->playerCount->setDisabled(true);
-    QString playerName = player->text().trimmed();
+    const QString &playerName = player->text().trimmed();
 
     if (!isValidColor()) {
         colorLabel->setText(COLOR_TAKEN);
@@ -218,8 +218,8 @@ void Dialog::addPlayer()
         } else {
             // More players than one
             bool valid = true;
-            for (auto s: players_) {
-                if (s.first == playerName) {
+            for (const auto &player: players_) {
+                if (player.first == playerName) {
                     valid = false;
                     labelText->setText(PLAYERNAME_TAKEN);
                     break;
@@ -306,7 +306,7 @@ void Dialog::playerLineEdit()
 
 void Dialog::setSeed()
 {
-    std::string seed = ui->seed->text().toStdString();
+    const std::string &seed = ui->seed->text().toStdString();
 
     for(unsigned int i=0; i<seed.length(); i++){
         seed_ += (int)seed[i];

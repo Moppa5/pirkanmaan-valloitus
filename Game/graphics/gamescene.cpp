@@ -19,7 +19,7 @@ void GameScene::resize()
 
     // Calculates rect with middle at (0,0).
     // Basically left upper corner coords and then width and height
-	QRect rect = QRect( mapWidth_ * tileScale_, mapHeight_ * tileScale_,
+    const QRect &rect = QRect( mapWidth_ * tileScale_, mapHeight_ * tileScale_,
 						mapWidth_ * tileScale_ - 1, mapHeight_ * tileScale_ - 1 );
 
     addRect(rect, QPen(Qt::black));
@@ -31,7 +31,7 @@ void GameScene::resize()
 
 void GameScene::loadTiles()
 {
-	for(auto tile : objmanager_->getTiles()){
+    for(const auto &tile : objmanager_->getTiles()){
 		drawItem(tile);
 	}
 }
@@ -46,7 +46,8 @@ void GameScene::drawItem(const std::shared_ptr<Course::GameObject> &obj)
 
     nItem->setPixmap(pix);
 
-	QPoint position = QPoint(obj->getCoordinate().x()*tileScale_, obj->getCoordinate().y()*tileScale_);
+    const QPoint &position = QPoint(obj->getCoordinate().x()*tileScale_,
+                                    obj->getCoordinate().y()*tileScale_);
 	//qDebug() << "created tile at " << obj->getCoordinate().asQpoint() << " turned into " << position;
 	nItem->setPos(position);
 
@@ -56,7 +57,7 @@ void GameScene::drawItem(const std::shared_ptr<Course::GameObject> &obj)
 void GameScene::drawClaimBorders()
 {
 	///// Delete old lines /////
-	for(auto line : borderLines_){
+    for(const auto &line : borderLines_){
 		this->removeItem(line);
 	}
 	borderLines_.clear();
@@ -176,8 +177,8 @@ void GameScene::drawClaimBorders()
 
 	///// Draw the lines /////
 	// Use paths for this later
-	for(unsigned int x=0; x<mapWidth_+1; x++){
-		for(unsigned int y=0; y<mapHeight_; y++){
+    for(int x=0; x<mapWidth_+1; x++){
+        for(int y=0; y<mapHeight_; y++){
 			QColor color = lines_ver.at(x).at(y).first;
 			if(color != nullptr){
 				borderLines_.push_back(addLine(QLine(x*tileScale_, y*tileScale_, x*tileScale_, (y+1)*tileScale_),
@@ -190,8 +191,8 @@ void GameScene::drawClaimBorders()
 			}
 		}
 	}
-	for(unsigned int y=0; y<mapHeight_+1; y++){
-		for(unsigned int x=0; x<mapWidth_; x++){
+    for(int y=0; y<mapHeight_+1; y++){
+        for(int x=0; x<mapWidth_; x++){
 			QColor color = lines_hor.at(x).at(y).first;
 			if(color != nullptr){
 				borderLines_.push_back(addLine(QLine(x*tileScale_, y*tileScale_, (x+1)*tileScale_, y*tileScale_),
@@ -208,15 +209,17 @@ void GameScene::drawClaimBorders()
 
 void GameScene::drawBordersToTiles(std::vector<MapItem *> tiles)
 {
-
+    // to be implemented
+    Q_UNUSED(tiles);
 }
 
 void GameScene::calculateBorders()
 {
-
+    // to be implemented
+    return;
 }
 
-void GameScene::highlightTile(MapItem *obj, bool highlightOn)
+void GameScene::highlightTile(MapItem *obj, const bool &highlightOn)
 {
 	if(obj == nullptr){
 		return;
@@ -228,42 +231,6 @@ void GameScene::highlightTile(MapItem *obj, bool highlightOn)
 		obj->removeHighlight();
 	}
 }
-
-/*bool GameScene::event(QEvent *event)
-{
-    if (event->type() == QEvent::GraphicsSceneMousePress){
-        QGraphicsSceneMouseEvent* mouseEvent =
-                dynamic_cast<QGraphicsSceneMouseEvent*>(event);
-
-        if (sceneRect().contains(mouseEvent->scenePos())) {
-            QPointF point = mouseEvent->scenePos() / mapScale_;
-            qDebug() << point;
-            point.rx() = floor(point.rx());
-            point.ry() = floor(point.ry());
-
-            QGraphicsItem* pressed = itemAt(point * mapScale_, QTransform());
-
-            if ( pressed == mapBoundRect_ ){
-                // Does nothing because area bound
-                qDebug() << "BoundingRect";
-                return false;
-
-            } else{
-                Game::MapItem* itemObject = static_cast<Game::MapItem*>(pressed);
-                std::shared_ptr<Course::GameObject> item = itemObject->getTileObject();
-                std::string owner = "";
-
-                if (item->getOwner() != nullptr) {
-                    owner = item->getOwner()->getName();
-                }
-                emit tileInfo(QString::fromStdString(item->getType()),
-                              itemObject,itemObject->getItem(),owner);
-            }
-        }
-
-    }
-    return true;
-}*/
 
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -288,7 +255,7 @@ void GameScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	}
 
 	// Minimum amount of pixels which is considered moving and not just a twitch in clicking
-	int minimumMovement = 10;
+    const int &minimumMovement = 10;
 	//qDebug() << "released click at " << event->scenePos();
 	if(abs(screenClickPosition_.x()-event->screenPos().x()) < minimumMovement &&
 			abs(screenClickPosition_.y() - event->screenPos().y()) < minimumMovement){

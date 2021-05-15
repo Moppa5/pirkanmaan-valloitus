@@ -27,8 +27,8 @@ void ScoreDialog::setAlignment()
     ui->score4->setAlignment(Qt::AlignCenter);
 }
 
-void ScoreDialog::insertGameScoreData(std::map<int, std::string>
-                                      playerScores)
+void ScoreDialog::insertGameScoreData(const std::map<int, std::string>
+                                      &playerScores)
 {
         ui->informationLabel->setText(GAME_END);
 
