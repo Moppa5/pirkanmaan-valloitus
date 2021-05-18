@@ -67,31 +67,12 @@ public:
 	 */
 	void calculateBorders();
 
-    /**
-     * @brief Adds claim for certain object
-     * @param obj to add claim
-     * @param claimColor based on player's color
-     */
-    void addClaim(MapItem* obj, const QColor &claimColor);
-
-    /**
-     * @brief Removes the claim
-     * @param obj to remove the claim from
-     */
-    void removeClaim(MapItem *obj);
-
 	/**
 	 * @brief Highlight the selected tile
 	 * @param obj the item to highlight
 	 * @param highlightOn bool to highlight or not
 	 */
 	void highlightTile(MapItem *obj, bool highlightOn=true);
-
-    /**
-     * @brief Refresh the scene items if they're stuck or won't update
-     * @param Players on the game
-     */
-    void refreshScene(const std::vector<std::shared_ptr<Player>> &players);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

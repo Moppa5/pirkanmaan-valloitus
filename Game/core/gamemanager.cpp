@@ -93,11 +93,6 @@ void GameManager::claimArea(MapItem* tile)
     std::shared_ptr<Course::PlayerBase> player = players_.at(currentPlayerIndex_);
     tile->getTileObject()->setOwner(player);
 	player->addObject(tile->getTileObject());
-
-    // Item color based on player's color
-    QColor color = players_.at(currentPlayerIndex_)->getColor();
-    gameScene_->addClaim(tile, color);
-    gameScene_->update(tile->boundingRect());
 }
 
 void GameManager::doTurn()
@@ -134,12 +129,6 @@ void GameManager::doTurn()
             }
         }
     }
-}
-
-void GameManager::updateOwners()
-{
-	// Don't do this, this recalculates everything
-    gameScene_->refreshScene(players_);
 }
 
 void GameManager::calculateScores()
@@ -262,7 +251,6 @@ void GameManager::addBuildingOnTile(MapItem* selectedItem, QString building)
     objectManager_->addBuilding(actualBuilding);
     tile->addBuilding(actualBuilding);
     actualBuilding->onBuildAction();
-    updateOwners();
 
     // Graphics
     selectedItem->setBuildingOnTile(building);
@@ -308,8 +296,7 @@ void GameManager::removeBuildingOnTile(MapItem *selectedItem, std::shared_ptr<Bu
 
 void GameManager::addWorkerOnTile(MapItem *selectedItem, QString worker)
 {
-    if (!selectedItem->claimed() or
-            selectedItem->getTileObject()->getOwner() !=
+    if (selectedItem->getTileObject()->getOwner() !=
                         players_.at(currentPlayerIndex_)) {
         throw Course::OwnerConflict(NOT_OWNED_TILE.toStdString());
     }

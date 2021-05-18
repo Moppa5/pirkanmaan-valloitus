@@ -28,18 +28,6 @@ public:
     MapItem(const std::shared_ptr<Course::GameObject> &obj, int size);
 
     /**
-     * @brief Calculates the boundings for this item
-     * @return QRectF that bounds the item
-     */
-	//QRectF boundingRect() const;
-
-    /**
-     * @brief Check claimed status
-     * @return Return true if claimed
-     */
-    bool claimed();
-
-    /**
      * @brief Paints the tile, buildings and workers
      * @param painter pointer for painting
      * @param option unused style pointer
@@ -91,18 +79,6 @@ public:
      */
     void removeHighlight();
 
-    /**
-     * @brief Sets claim color
-     * @param Player's color
-     */
-    void setClaimColor(const QColor &color);
-
-    /**
-     * @brief Fetches the claim color for this item
-     * @return Claim color or nullptr if not set
-     */
-    QColor getClaimColor();
-
 private:
     /**
      * @brief Draws the tileImage
@@ -134,21 +110,12 @@ private:
      */
     void drawBorder(QPainter* painter);
 
-    /**
-     * @brief draw the claim
-     * @param painter pointer
-     */
-    void drawClaim(QPainter* painter);
-
     const std::shared_ptr<Course::GameObject> itemObject_;
     int size_;
     QPoint sceneLocation_;
 
     QPixmap currentItem_;
-    bool claimed_ = false;
-    // Shows owner
-    QColor claimColor_ = nullptr;
-    QPen claimPen_;
+
     // Highlighting
     QPen highlightPen_;
     QColor highlightColor_;

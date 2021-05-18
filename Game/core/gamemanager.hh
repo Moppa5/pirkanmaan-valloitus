@@ -243,12 +243,6 @@ private:
      * @post Exception guarantee: No-throw
      */
     void doTurn();
-    /**
-     * @brief Updates all the tiles on the map to correct owners
-     * @post Exception guarantee: No-throw
-     * @note Used for buildings that claim tiles
-     */
-    void updateOwners();
 
     /**
      * @brief Calculates the score of the game
