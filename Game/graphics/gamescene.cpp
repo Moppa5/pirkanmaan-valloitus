@@ -216,16 +216,6 @@ void GameScene::calculateBorders()
 
 }
 
-void GameScene::addClaim(MapItem* obj,const QColor &claimColor)
-{
-    obj->setClaimColor(claimColor);
-}
-
-void GameScene::removeClaim(MapItem* obj)
-{
-    obj->setClaimColor("");
-}
-
 void GameScene::highlightTile(MapItem *obj, bool highlightOn)
 {
 	if(obj == nullptr){
@@ -236,33 +226,6 @@ void GameScene::highlightTile(MapItem *obj, bool highlightOn)
 		obj->addHighlight();
 	} else {
 		obj->removeHighlight();
-	}
-}
-
-void GameScene::refreshScene(const std::vector<std::shared_ptr<Player>> &players)
-{
-	QList<QGraphicsItem*> itemList = items();
-
-	for (auto item: itemList) {
-		// Cast and check if the item is MapItem
-		MapItem* trueItem = dynamic_cast<MapItem*>(item);
-		if(trueItem == nullptr){
-			continue;
-		}
-
-		if (trueItem->getTileObject()->getOwner() != nullptr) {
-			// Find owner color
-			std::shared_ptr<Player> player;
-			std::string ownerName = trueItem->getTileObject()->getOwner()->getName();
-
-			for(std::shared_ptr<Player> p : players){
-				if(p->getName() == ownerName){
-					player = p;
-				}
-			}
-			addClaim(trueItem,player->getColor());
-			trueItem->update(trueItem->boundingRect());
-		}
 	}
 }
 

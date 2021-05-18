@@ -11,20 +11,6 @@ MapItem::MapItem(const std::shared_ptr<Course::GameObject> &obj,
 {
     highlightPen_.setWidth(1);
     highlightPen_.setJoinStyle(Qt::MiterJoin);
-
-    claimPen_.setWidth(2);
-}
-
-/*QRectF MapItem::boundingRect() const
-{
-	QPoint topleft = scenePos().toPoint();
-	QPoint bottomright = scenePos().toPoint() + QPoint(size_,size_);
-    return QRectF(topleft,bottomright);
-}*/
-
-bool MapItem::claimed()
-{
-    return claimed_;
 }
 
 void MapItem::paint(QPainter *painter,
@@ -36,7 +22,6 @@ void MapItem::paint(QPainter *painter,
     drawBuildings(painter);
     drawWorkers(painter);
 
-    if(claimColor_ != "") drawClaim(painter);
     if(borderColor_ != "") drawBorder(painter);
     // Draw this after other borders
     if(highlightColor_ != "") drawHighlight(painter);
@@ -137,29 +122,6 @@ void MapItem::drawBorder(QPainter *painter)
         QRectF bounding = boundingRect();
         bounding.setRect(bounding.x()-0.5, bounding.y()-0.5,
                          bounding.width()+0.5, bounding.height()+0.5);
-        painter->drawRect(bounding);
-    }
-}
-
-void MapItem::setClaimColor(const QColor &color)
-{
-    claimPen_.setBrush(color);
-    claimColor_ = color;
-}
-
-QColor MapItem::getClaimColor()
-{
-    return claimColor_;
-}
-
-void MapItem::drawClaim(QPainter *painter)
-{
-    if (claimColor_ != "") {
-        // Adds marker based on player's color
-        claimed_ = true;
-        painter->setPen(claimPen_);
-        QRectF bounding = boundingRect();
-        bounding.setRect(bounding.x()+1,bounding.y()+1,1,1);
         painter->drawRect(bounding);
     }
 }
