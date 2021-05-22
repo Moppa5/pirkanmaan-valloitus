@@ -14,15 +14,15 @@ GameManager::GameManager(std::shared_ptr<GameEventHandler> geh,
 
 }
 
-void GameManager::addPlayers(std::unordered_map<QString, QColor> players)
+void GameManager::addPlayers(const std::unordered_map<QString, QColor>& players)
 {
 	for(const std::pair<QString, QColor> player : players){
 		addPlayer(player);
 	}
 }
 
-void GameManager::addPlayer(std::pair<QString, QColor> name,
-							std::vector<std::shared_ptr<Course::GameObject> >
+void GameManager::addPlayer(const std::pair<QString, QColor>& name,
+							const std::vector<std::shared_ptr<Course::GameObject>>&
 							objects)
 {
 	std::shared_ptr<Player> player = std::make_shared<Player>(name.first.toStdString(),
@@ -34,12 +34,12 @@ void GameManager::addPlayer(std::pair<QString, QColor> name,
 	players_.push_back(player);
 }
 
-void GameManager::setTurnCount(int count)
+void GameManager::setTurnCount(const int count)
 {
 	totalTurnCount_ = count;
 }
 
-std::pair<int, int> GameManager::setMapSize(int width, int height)
+std::pair<int, int> GameManager::setMapSize(const int width, const int height)
 {
     if(width >= MIN_MAP_WIDTH){
         mapWidth_ = width;
@@ -51,7 +51,7 @@ std::pair<int, int> GameManager::setMapSize(int width, int height)
 	return std::make_pair(mapWidth_, mapHeight_);
 }
 
-void GameManager::setSeed(int seed)
+void GameManager::setSeed(const int seed)
 {
 	seed_ = seed;
 }
@@ -109,10 +109,13 @@ void GameManager::doTurn()
 
     // Test if poorTiles have enough resources now after other
     // tiles have generated them
-    for(auto tile : poorTiles){
+	// Investigate if this needs multiple iterations
+	for(auto& tile : poorTiles){
         // Find mapitem of the tile
+		// Holy hell this is BAD!
+		//TODO: issue #19
         MapItem* mapItem = nullptr;
-        for(auto m : gameScene_->items()){
+		for(auto& m : gameScene_->items()){
             mapItem = static_cast<Game::MapItem*>(m);
 
             if(mapItem->getTileObject() == tile){
@@ -120,11 +123,11 @@ void GameManager::doTurn()
             }
         }
         if(mapItem != nullptr){
-            for(auto w : tile->getWorkers()){
+			for(auto& w : tile->getWorkers()){
                 removeWorkerOnTile(mapItem, w);
             }
 
-            for(auto b : tile->getBuildings()){
+			for(auto& b : tile->getBuildings()){
                 removeBuildingOnTile(mapItem, b);
             }
         }
@@ -144,32 +147,32 @@ void GameManager::calculateScores()
     }
 
     // Add buildings and workers
-    for(std::shared_ptr<Course::TileBase> tile : objectManager_->getTiles()){
+	for(std::shared_ptr<Course::TileBase>& tile : objectManager_->getTiles()){
         if(tile->getOwner() != nullptr){
             playerScores_[tile->getOwner()->getName()] += 50;
         }
 
-        for(std::shared_ptr<Course::BuildingBase> building : tile->getBuildings()){
+		for(std::shared_ptr<Course::BuildingBase>& building : tile->getBuildings()){
             if(building->getOwner() != nullptr){
                 std::string owner = building->getOwner()->getName();
                 addResourcesToScore(owner, building->BUILD_COST);
             }
         }
-        for(std::shared_ptr<Course::WorkerBase> worker : tile->getWorkers()){
+		for(std::shared_ptr<Course::WorkerBase>& worker : tile->getWorkers()){
             std::string owner = worker->getOwner()->getName();
             addResourcesToScore(owner, worker->RECRUITMENT_COST);
         }
     }
 }
 
-void GameManager::addResourcesToScore(std::string name,
-                                      Course::ResourceMap resources)
+void GameManager::addResourcesToScore(const std::string& name,
+									  const Course::ResourceMap& resources)
 {
-    playerScores_[name] += resources[WOOD];
-    playerScores_[name] += resources[FOOD];
-    playerScores_[name] += resources[STONE];
-    playerScores_[name] += resources[ORE] * 2;
-    playerScores_[name] += resources[MONEY] * 2;
+	playerScores_[name] += resources.at(WOOD);
+	playerScores_[name] += resources.at(FOOD);
+	playerScores_[name] += resources.at(STONE);
+	playerScores_[name] += resources.at(ORE) * 2;
+	playerScores_[name] += resources.at(MONEY) * 2;
 }
 
 void GameManager::endTurn()
@@ -195,7 +198,7 @@ void GameManager::endTurn()
     }
 }
 
-void GameManager::addBuildingOnTile(MapItem* selectedItem, QString building)
+void GameManager::addBuildingOnTile(MapItem* selectedItem, const QString& building)
 {
     std::shared_ptr<Course::TileBase> tile =
             objectManager_->getTile(selectedItem->getTileObject()->getCoordinate());
@@ -258,7 +261,7 @@ void GameManager::addBuildingOnTile(MapItem* selectedItem, QString building)
 }
 
 std::shared_ptr<Course::BuildingBase> GameManager::createBuilding(
-        QString& type)
+		const QString& type)
 {
     std::shared_ptr<Course::BuildingBase> building;
 
@@ -294,7 +297,7 @@ void GameManager::removeBuildingOnTile(MapItem *selectedItem, std::shared_ptr<Bu
     objectManager_->removeBuilding(building);
 }
 
-void GameManager::addWorkerOnTile(MapItem *selectedItem, QString worker)
+void GameManager::addWorkerOnTile(MapItem *selectedItem, const QString& worker)
 {
     if (selectedItem->getTileObject()->getOwner() !=
                         players_.at(currentPlayerIndex_)) {
@@ -335,7 +338,7 @@ void GameManager::addWorkerOnTile(MapItem *selectedItem, QString worker)
                          selectedItem->getTileObject()->getType());
 }
 
-std::shared_ptr<WorkerBase> GameManager::createWorker(QString &type)
+std::shared_ptr<WorkerBase> GameManager::createWorker(const QString& type)
 {
     std::shared_ptr<Course::WorkerBase> worker;
 
@@ -431,7 +434,7 @@ int GameManager::getTurnCount()
     return totalTurnCount_;
 }
 
-bool GameManager::changeTurnCount(int turnCount)
+bool GameManager::changeTurnCount(const int turnCount)
 {
     if(turnCount >= MIN_ROUND_COUNT && turnCount >= currentTurnNumber_)
     {

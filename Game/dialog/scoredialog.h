@@ -32,7 +32,7 @@ public slots:
      * @brief Shows the game scoreboard
      * @param playerScores to show
      */
-    void insertGameScoreData(std::map<int, std::string> playerScores);
+    void insertGameScoreData(const std::map<int, std::string> &playerScores);
 
 private:
     Ui::ScoreDialog *ui;

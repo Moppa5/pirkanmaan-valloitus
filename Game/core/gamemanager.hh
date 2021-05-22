@@ -59,7 +59,7 @@ public:
 	 * @brief Add players to the game
 	 * @param players - list of players
 	 */
-	void addPlayers(std::unordered_map<QString, QColor> players);
+	void addPlayers(const std::unordered_map<QString, QColor>& players);
 
 	/**
 	 * @brief Adds player to the game
@@ -67,14 +67,14 @@ public:
 	 * @param objects - GameObjects that belong to the player
 	 * @post Exception guarantee: No-throw
 	 */
-	void addPlayer(std::pair<QString, QColor> name, std::vector<std::shared_ptr<Course::GameObject>> objects={});
+	void addPlayer(const std::pair<QString, QColor>& name, const std::vector<std::shared_ptr<Course::GameObject>>& objects={});
 
 	/**
 	 * @brief Sets the amount of turns every player will have
 	 * @param count - Turn count
 	 * @note No limits are enforced here
 	 */
-	void setTurnCount(int count);
+	void setTurnCount(const int count);
 
     /**
      * @brief Sets the map size in tiles
@@ -84,13 +84,13 @@ public:
      * @note Automatically applies min and max bounds.
      *  Return can be used to check if the size was valid
      */
-    std::pair<int,int> setMapSize(int width, int height);
+	std::pair<int,int> setMapSize(const int width, const int height);
 
 	/**
 	 * @brief Sets the seed
 	 * @param seed -
 	 */
-	void setSeed(int seed);
+	void setSeed(const int seed);
 
 	/**
 	 * @brief Starts the game if everything is ok
@@ -125,7 +125,7 @@ public:
      * @exceptions OwnerConflict - Not owned by the current player
      * @exceptions IllegalAction - Cannot be placed / not enough resources
      */
-    void addBuildingOnTile(MapItem* selectedItem, QString building);
+	void addBuildingOnTile(MapItem* selectedItem, const QString& building);
     /**
      * @brief removeBuildingOnTile
      * @param selectedItem - Selected MapItem
@@ -147,7 +147,7 @@ public:
      * @exceptions IllegalAction - Not enough resources
      * @note - Does not check if the tile has space for the worker
      */
-    void addWorkerOnTile(MapItem* selectedItem, QString worker);
+	void addWorkerOnTile(MapItem* selectedItem, const QString& worker);
     /**
      * @brief removeWorkerOnTile
      * @param selectedItem - Selected MapItem
@@ -182,7 +182,7 @@ public:
      * @return True if new turn count is valid, higher than current or min
      * @note Used only when changing turn count during the game
      */
-    bool changeTurnCount(int turnCount);
+	bool changeTurnCount(const int turnCount);
 
     /**
      * @brief Gets current game turn number
@@ -221,7 +221,7 @@ private:
      * @post Exception guarantee: No-throw
      * @return Building object
      */
-    std::shared_ptr<Course::BuildingBase> createBuilding(QString& type);
+	std::shared_ptr<Course::BuildingBase> createBuilding(const QString& type);
 
     /**
      * @brief Creates Worker object for addWorkerOnTile
@@ -230,7 +230,7 @@ private:
      * @post Exception guarantee: No-throw
      * @return Worker object
      */
-    std::shared_ptr<Course::WorkerBase> createWorker(QString& type);
+	std::shared_ptr<Course::WorkerBase> createWorker(const QString& type);
 
     /**
      * @brief Generates the world
@@ -254,8 +254,8 @@ private:
      * @param name of the player
      * @param resources of the player
      */
-    void addResourcesToScore(std::string name,
-                             Course::ResourceMap resources);
+	void addResourcesToScore(const std::string& name,
+							 const Course::ResourceMap& resources);
 
     std::shared_ptr<GameEventHandler> gameEventHandler_ = nullptr;
     std::shared_ptr<ObjectManager> objectManager_ = nullptr;

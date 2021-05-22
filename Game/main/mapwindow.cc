@@ -35,7 +35,7 @@ MapWindow::MapWindow(QWidget *parent) :
     ui_->workersBox->addItem(WORKER_BASIC);
     ui_->workersBox->addItem(WORKER_FARMER);
     ui_->workersBox->addItem(WORKER_MINER);
-    //ui_->workersBox->addItem(WORKER_SABOTEUR);
+    // to be continued ui_->workersBox->addItem(WORKER_SABOTEUR);
 
     // Add resources to shop
     ui_->shopBox->addItem("Wood");
@@ -55,12 +55,12 @@ MapWindow::~MapWindow()
 
 void MapWindow::gameButtonClicked()
 {   
-    if(settingsDialog_->getPlayers().size() == 0){
+    if(settingsDialog_->getPlayers().empty()){
         settingsDialog_->open();
         return;
     }
 
-    if(gameStarted_ == false){
+    if(!gameStarted_){
         newGame();
     }else{
         gManager_->endTurn();
@@ -85,7 +85,7 @@ void MapWindow::openScoreDialog()
         return;
     }
     scoreDialog_->insertGameScoreData(gManager_->getScores());
-    scoreDialog_->exec();
+    scoreDialog_->open();
 }
 
 void MapWindow::newGame()
@@ -115,7 +115,7 @@ void MapWindow::newGame()
     gManager_ = gm;
 
 	// Check if game can start
-	if(gManager_->startGame() == false){
+    if(!gManager_->startGame()){
 		resetGame();
 		return;
 	}
@@ -123,7 +123,7 @@ void MapWindow::newGame()
     ui_->gameButton->setText(GAME_BUTTON_WHILE_GAME);
     setButtonStateEnabled(true);
     // Resize the graphicsview and fit map to it
-    std::pair<int, int> mapSize = gm->getMapSize();
+    const std::pair<int, int> &mapSize = gm->getMapSize();
 	resizeGameView(mapSize.first, mapSize.second);
 
     // Update GUI
@@ -155,7 +155,7 @@ void MapWindow::resetGame()
     scoreDialog_ = std::make_shared<ScoreDialog>();
 }
 
-void MapWindow::setButtonStateEnabled(const bool state)
+void MapWindow::setButtonStateEnabled(const bool &state)
 {
     ui_->claimButton->setEnabled(state);
     ui_->buildButton->setEnabled(state);
@@ -165,13 +165,13 @@ void MapWindow::setButtonStateEnabled(const bool state)
     ui_->sellButton->setEnabled(state);
 }
 
-void MapWindow::resizeGameView(int relativeWidth, int relativeHeight)
+void MapWindow::resizeGameView(const int &relativeWidth, const int &relativeHeight)
 {
-    int oldViewWidth = ui_->graphicsView->width();
-    int oldWindowWidth = this->width();
+    const int &oldViewWidth = ui_->graphicsView->width();
+    const int &oldWindowWidth = this->width();
 
     // Resize graphicsView
-    int newViewWidth = float(relativeWidth)/
+    const int &newViewWidth = float(relativeWidth)/
             float(relativeHeight)*ui_->graphicsView->height();
     ui_->graphicsView->setFixedWidth(newViewWidth);
 
@@ -192,9 +192,9 @@ void MapWindow::resizeGameView(int relativeWidth, int relativeHeight)
     ui_->graphicsView->fitInView(gScene_->sceneRect(), Qt::KeepAspectRatio);
 }
 
-void MapWindow::setTurnCount(int turnNumber)
+void MapWindow::setTurnCount(const int &turnNumber)
 {
-    QString text = QString::fromStdString("Turn " + std::to_string(turnNumber) +
+    const QString &text = QString::fromStdString("Turn " + std::to_string(turnNumber) +
             "/" + std::to_string(gManager_->getTurnCount()));
     ui_->turnCountLabel->setText(text);
 }
@@ -273,8 +273,8 @@ void MapWindow::updatePlayerInfo(const std::shared_ptr<Game::Player> &player)
     // Update name
     ui_->currentPlayerNameLabel->setText(QString::fromStdString(
                                              player->getName()));
-    QColor playerColor = player->getColor();
-    QString style = "background-color:rgb(" +
+    const QColor &playerColor = player->getColor();
+    const QString &style = "background-color:rgb(" +
             QString::number(playerColor.red()) + "," +
             QString::number(playerColor.green()) + "," +
             QString::number(playerColor.blue()) + ");";
@@ -337,7 +337,7 @@ void MapWindow::updateBuildingCost()
         path = BUILDING_IMAGE;
     }
 
-    ui_->buildCostLabel->setText("");
+    ui_->buildCostLabel->setText(EMPTY);
     ui_->selectedBuildingImage->setPixmap(QPixmap(path).
                                           scaled(50,50,Qt::KeepAspectRatio));
 }
@@ -380,14 +380,14 @@ void MapWindow::setBuildingCost(ResourceMap resources)
 
 void MapWindow::updateWorkersCost()
 {
-    double count = ui_->workerSpinBox->value();
-    QString selectedWorker = ui_->workersBox->currentText();
+    const double &count = ui_->workerSpinBox->value();
+    const QString &selectedWorker = ui_->workersBox->currentText();
     ResourceMap workerCost;
-    ResourceMapDouble multiplyMap = {{BasicResource::MONEY, count},
-                                     {BasicResource::FOOD, count},
-                                     {BasicResource::ORE, count},
-                                     {BasicResource::STONE, count},
-                                     {BasicResource::WOOD,count}};
+    const ResourceMapDouble &multiplyMap = {{BasicResource::MONEY, count},
+                                           {BasicResource::FOOD, count},
+                                           {BasicResource::ORE, count},
+                                           {BasicResource::STONE, count},
+                                           {BasicResource::WOOD,count}};
 
     if (selectedWorker == WORKER_BASIC) {
         workerCost = Course::ConstResourceMaps::BW_RECRUITMENT_COST;
@@ -446,7 +446,7 @@ void MapWindow::updateSellingValue()
         return;
     }
 
-    QString resource = ui_->shopBox->currentText();
+    const QString &resource = ui_->shopBox->currentText();
     int value = 0;
 
     if(resource == "Wood" || resource == "Food" || resource == "Stone"){
@@ -465,7 +465,7 @@ void MapWindow::updateWorkersInfo(Game::MapItem* &item)
     // Also update maximums for slider etc
     std::shared_ptr<TileBase> tile = objManager_->getTile(
                 item->getTileObject()->getCoordinate());
-    int maxWorkers = tile->MAX_WORKERS;
+    const int &maxWorkers = tile->MAX_WORKERS;
     ui_->workerSpinBox->setMaximum(maxWorkers-tile->getWorkerCount());
     ui_->workerSlider->setMaximum(maxWorkers-tile->getWorkerCount());
     ui_->workerCountBrowser->setText(QString::fromStdString(
@@ -548,7 +548,7 @@ void MapWindow::updateTileInfo(const QString &type, Game::MapItem* &item,
     ui_->ownerBrowser->setAlignment(Qt::AlignCenter);
     ui_->buildingsBrowser->setAlignment(Qt::AlignCenter);
     ui_->workersBrowser->setAlignment(Qt::AlignCenter);
-    ui_->claimCostLabel->setText("");
+    ui_->claimCostLabel->setText(EMPTY);
 
     // Remove border from previously clicked tile
     if(currentItem_ != nullptr && item->getTileObject()
@@ -584,7 +584,7 @@ void MapWindow::updateTileProductionValues(Game::MapItem* item)
     ui_->moneyProductionLabel->setText(QString::number(resources[MONEY]));
 }
 
-void MapWindow::updateShopSlider(int value)
+void MapWindow::updateShopSlider(const int &value)
 {
     if (value != 0) {
         ui_->shopAmountSlider->setValue(value);
@@ -592,7 +592,7 @@ void MapWindow::updateShopSlider(int value)
     ui_->shopAmountSlider->setValue(ui_->shopAmountBox->value());
 }
 
-void MapWindow::updateShopSpinBox(int value)
+void MapWindow::updateShopSpinBox(const int &value)
 {
     if (value != 0) {
         ui_->shopAmountBox->setValue(value);
@@ -600,7 +600,7 @@ void MapWindow::updateShopSpinBox(int value)
     ui_->shopAmountBox->setValue(ui_->shopAmountSlider->value());
 }
 
-void MapWindow::updateWorkerSlider(int value)
+void MapWindow::updateWorkerSlider(const int &value)
 {
     if (value != 0) {
         ui_->workerSlider->setValue(value);
@@ -608,7 +608,7 @@ void MapWindow::updateWorkerSlider(int value)
     ui_->workerSlider->setValue(ui_->workerSpinBox->value());
 }
 
-void MapWindow::updateWorkerSpinBox(int value)
+void MapWindow::updateWorkerSpinBox(const int &value)
 {
     if (value != 0) {
         ui_->workerSpinBox->setValue(value);
@@ -620,21 +620,21 @@ void MapWindow::updateWorkerSpinBox(int value)
 
 void MapWindow::resetElements()
 {
-	ui_->turnCountLabel->setText("");
-	ui_->currentPlayerNameLabel->setText("");
+    ui_->turnCountLabel->setText(EMPTY);
+    ui_->currentPlayerNameLabel->setText(EMPTY);
 
     ui_->buildingsBox->setCurrentIndex(0);
-    ui_->buildCostLabel->setText("");
+    ui_->buildCostLabel->setText(EMPTY);
 
     ui_->shopBox->setCurrentIndex(0);
-    ui_->shopCostLabel->setText("");
+    ui_->shopCostLabel->setText(EMPTY);
     ui_->shopAmountBox->setValue(0);
     ui_->shopAmountSlider->setValue(0);
 
     ui_->workersBox->setCurrentIndex(0);
     ui_->workerSlider->setValue(0);
     ui_->workerSpinBox->setValue(0);
-    ui_->hireCostLabel->setText("");
+    ui_->hireCostLabel->setText(EMPTY);
 }
 
 void MapWindow::buildClicked()
@@ -670,7 +670,7 @@ void MapWindow::buildClicked()
 
 void MapWindow::removeBuildingClicked()
 {
-    int index = ui_->buildingsOnTile->currentRow();
+    const int &index = ui_->buildingsOnTile->currentRow();
     if(index == -1){
         return;
     }
@@ -700,7 +700,7 @@ void MapWindow::sellClicked()
     // Prevents selling too many resources
     updateShopLimits();
 
-    QString resource = ui_->shopBox->currentText();
+    const QString &resource = ui_->shopBox->currentText();
     BasicResource resourceType = NONE;
     int value = 0;
 
@@ -733,7 +733,7 @@ void MapWindow::updateShopLimits()
         return;
     }
 
-    QString resource = ui_->shopBox->currentText();
+    const QString &resource = ui_->shopBox->currentText();
 
     // Set limits to sliders
     std::shared_ptr<Course::ResourceMap> playerResources = gManager_->getCurrentPlayer()->getResourceMap();
@@ -764,7 +764,7 @@ void MapWindow::workerAssigned()
         return;
     }
     try{
-        int loopValue = ui_->workerSpinBox->value();
+        const int &loopValue = ui_->workerSpinBox->value();
         for(int i=0; i<loopValue; i++){
            gManager_->addWorkerOnTile(
                         currentItem_, ui_->workersBox->currentText());
@@ -805,7 +805,7 @@ void MapWindow::claimClicked()
 
 void MapWindow::freeWorkerClicked()
 {
-    int index = ui_->workersOnTileList->currentRow();
+    const int &index = ui_->workersOnTileList->currentRow();
     if(index == -1){
         return;
     }
@@ -821,6 +821,6 @@ void MapWindow::freeWorkerClicked()
         updateTileProductionValues(currentItem_);
     }
     catch (const Course::BaseException &e){
-
+        // to be implemented?
     }
 }

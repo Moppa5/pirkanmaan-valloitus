@@ -64,18 +64,17 @@ public slots:
     void resetGame();
 
     /**
-     * @brief Set game buttons for state
+     * @brief Helper to set game buttons for state
      * @param state true or false
      */
-
-    void setButtonStateEnabled(const bool state);
+    void setButtonStateEnabled(const bool &state);
 
     /**
      * @brief Resizes the window based on MapView
      * @param relativeWidth
      * @param relativeHeight
      */
-    void resizeGameView(int relativeWidth, int relativeHeight);
+    void resizeGameView(const int &relativeWidth, const int &relativeHeight);
 
     /**
      * @brief Zooms the view in
@@ -154,25 +153,25 @@ public slots:
      * @brief Updates shop slider
      * @param value optional to put the slider value
      */
-    void updateShopSlider(int value = 0);
+    void updateShopSlider(const int &value = 0);
 
     /**
      * @brief Updates the shop spinbox
      * @param value optional to put the spinbox value
      */
-    void updateShopSpinBox(int value = 0);
+    void updateShopSpinBox(const int &value = 0);
 
     /**
      * @brief Updates worker slider
      * @param value optional to put the slider value
      */
-    void updateWorkerSlider(int value = 0);
+    void updateWorkerSlider(const int &value = 0);
 
     /**
      * @brief Updates the worker spinbox
      * @param value optional to put the spinbox value
      */
-    void updateWorkerSpinBox(int value = 0);
+    void updateWorkerSpinBox(const int &value = 0);
 
     /**
      * @brief Resets elements like spinboxes, sliders etc.
@@ -220,7 +219,7 @@ private:
      * @brief Adjusts the current turn count
      * @param Turn number to put on
      */
-    void setTurnCount(int turnNumber);
+    void setTurnCount(const int &turnNumber);
 
     /**
      * @brief Adjusts MapWindow GUI settings etc.
